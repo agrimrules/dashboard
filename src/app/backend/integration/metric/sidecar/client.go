@@ -160,6 +160,12 @@ func (self sidecarClient) ithResourceDownload(selector sidecarSelector, metricNa
 			return
 		}
 
+		if len(rawResult.Items) == 0 {
+			result.Metric <- nil
+			result.Error <- nil
+			return
+		}
+
 		dataPoints := DataPointsFromMetricJSONFormat(rawResult.Items[0].MetricPoints)
 
 		result.Metric <- &metricapi.Metric{
@@ -249,6 +255,6 @@ func CreateSidecarClient(host string, k8sClient kubernetes.Interface) (
 		return sidecarClient{}, err
 	}
 	log.Printf("Creating remote Sidecar client for %s", host)
-	c := remoteSidecarClient{client: restClient.CoreV1().RESTClient()}
+	c := remoteSidecarClient{client: restClient.RESTClient()}
 	return sidecarClient{client: c}, nil
 }

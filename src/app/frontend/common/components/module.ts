@@ -35,7 +35,6 @@ import {BreadcrumbsComponent} from './breadcrumbs/component';
 import {CardComponent} from './card/component';
 import {ChipDialog} from './chips/chipdialog/dialog';
 import {ChipsComponent} from './chips/component';
-import {CommaSeparatedListComponent} from './commaseparatedlist/component';
 import {ConditionListComponent} from './condition/component';
 import {ContainerCardComponent} from './container/component';
 import {CreatorCardComponent} from './creator/component';
@@ -80,7 +79,8 @@ import {SecretListComponent} from './resourcelist/secret/component';
 import {ServiceListComponent} from './resourcelist/service/component';
 import {StatefulSetListComponent} from './resourcelist/statefulset/component';
 import {StorageClassListComponent} from './resourcelist/storageclass/component';
-import {SparklineComponent} from './sparkline/component';
+import {CpuSparklineComponent} from './sparkline/cpu/component';
+import {MemorySparklineComponent} from './sparkline/memory/component';
 import {TextInputComponent} from './textinput/component';
 import {UploadFileComponent} from './uploadfile/component';
 import {ZeroStateComponent} from './zerostate/component';
@@ -104,7 +104,6 @@ const components = [
   CronJobListComponent,
   ClusterRoleListComponent,
   ConfigMapListComponent,
-  CommaSeparatedListComponent,
   ColumnComponent,
   ChipDialog,
   ContainerCardComponent,
@@ -162,7 +161,8 @@ const components = [
   StatefulSetListComponent,
   SecretListComponent,
   ServiceListComponent,
-  SparklineComponent,
+  CpuSparklineComponent,
+  MemorySparklineComponent,
   ScaleDefaultActionbar,
 
   TextInputComponent,

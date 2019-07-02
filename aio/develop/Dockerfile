@@ -18,7 +18,8 @@
 # run gulp tasks on the code with only docker installed
 
 # golang is based on debian:jessie
-FROM golang
+# Specify version to clarify which version we use.
+FROM golang:1.12
 
 # Install Node.js. Go is already installed.
 # A small tweak, apt-get update is already run by the nodejs setup script,
@@ -30,11 +31,15 @@ RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - \
 	patch \
 	chromium \
 	bc \
+	sudo \
+	gosu \
+	nano \
+	less \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& apt-get clean
 
 # Install dependencies. This will take a while.
-RUN npm install -g npm@latest gulp
+RUN npm install -g npm@latest gulp@4.0.2 @angular/cli@8.0.3
 
 # Set environment variable for JavaScript tests.
 ENV CHROME_BIN=/usr/bin/chromium
@@ -65,22 +70,25 @@ RUN curl -sSL https://download.docker.com/linux/static/stable/x86_64/docker-18.0
 # `npm ci` installs golangci, but this installation is needed
 # for running `npm run check` singlely, like
 # `aio/develop/run-npm-on-container.sh run check`.
-RUN go get github.com/golangci/golangci-lint/cmd/golangci-lint
+RUN curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.17.1
 
 # Install delve for debuging go files.
 RUN go get github.com/go-delve/delve/cmd/dlv
+
+# Enable go mod. Note(shu-mutou): do not set this before `go get`
+ENV GO111MODULE=on
 
 # Volume for source code
 VOLUME ["/go/src/github.com/kubernetes/dashboard"]
 
 # Mount point for kubeconfig
-RUN mkdir -p /root/.kube
+RUN mkdir -p /home/user/.kube
 
 # Current directory is always dashboard source directory.
 WORKDIR /go/src/github.com/kubernetes/dashboard
 
 # Expose port for frontend, backend and remote debuging
-EXPOSE 8080 9090 2345
+EXPOSE 8080 8443 9090 2345
 
-# Run npm command in container. 
-CMD ./aio/develop/npm-command.sh
+# Run gosu command in container.
+CMD ./aio/develop/gosu-command.sh
